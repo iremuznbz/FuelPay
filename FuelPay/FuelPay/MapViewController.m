@@ -25,7 +25,9 @@ static NSString *apiKey =@"";
     CLLocationCoordinate2D userCoord;
 }
 
-@synthesize selected,mapView,myNavigateButton;
+@synthesize selected,mapView;
+
+@synthesize receivedLat,receivedLon,receivedName;
 
 
 
@@ -39,8 +41,8 @@ static NSString *apiKey =@"";
         locationManager.distanceFilter = 5.0f;
         [locationManager startUpdatingLocation];
     }
-    NSLog(@"location:%f",locationManager.location.coordinate.latitude);
-    NSLog(@"location:%f",locationManager.location.coordinate.longitude);
+    NSLog(@"current location:%f",locationManager.location.coordinate.latitude);
+    NSLog(@"current location:%f",locationManager.location.coordinate.longitude);
     coordinate.latitude = locationManager.location.coordinate.latitude;
     coordinate.longitude = locationManager.location.coordinate.longitude;
   
@@ -69,21 +71,23 @@ static NSString *apiKey =@"";
 {
     [super viewDidLoad];
     
+    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithTitle:@"Routes" style:UIBarButtonItemStyleBordered target:self action:@selector(drawRoute)];
+    self.navigationItem.rightBarButtonItem = button;
+    
      userCoord = [self getGPSLocation]; // camera will zoom user location with these datas
     
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:userCoord.latitude
-                                                            longitude:userCoord.longitude
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:[receivedLat floatValue]
+                                                            longitude:[receivedLon floatValue]
                                                                  zoom:4];
     mapView = [GMSMapView mapWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 40) camera:camera];
     [mapView setMyLocationEnabled:YES];
-    [mapView bringSubviewToFront:myNavigateButton];
+
     
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = camera.target;
-    marker.snippet = @"You re here";
+    marker.snippet = receivedName;
     marker.map = mapView;
     
-    NSLog(@"selected row name:%@",[self.selected locationName]);
     
     /*
      GMSMutablePath *path = [GMSMutablePath path];
@@ -117,10 +121,12 @@ static NSString *apiKey =@"";
     return s;
 }
 
-- (IBAction)NavigateButton:(id)sender {
+- (void) drawRoute {
+
+    
     
     NSString *startPos =[NSString stringWithFormat:@"%f,%f",userCoord.latitude,userCoord.longitude];
-    NSString *endPos =[NSString stringWithFormat:@"%@,%@",selected.locationLatitude,selected.locationLongitude];
+    NSString *endPos =[NSString stringWithFormat:@"%@,%@",receivedLat,receivedLon];
     
     [[GMDirectionService sharedInstance] getDirectionsFrom:startPos to:endPos succeeded:^(GMDirection *directionResponse) {
         if ([directionResponse statusOK]){
@@ -139,14 +145,12 @@ static NSString *apiKey =@"";
                 
             }
             
-            //NSLog(@"steps%@",steps);
+            NSLog(@"steps%@",steps);
         }
         NSLog(@"direction response:%@ from:%@ to:%@",directionResponse.status,startPos,endPos);
     } failed:^(NSError *error) {
         NSLog(@"Can't reach the server");
     }];
-    
-    
 
     
 }

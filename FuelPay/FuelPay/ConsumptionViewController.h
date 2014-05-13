@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *tlField;
 - (IBAction)sendInfo:(id)sender;
 - (IBAction)showStatistics:(id)sender;
+-(void)fetchData;
 @property (strong, nonatomic) IBOutlet UIButton *sendButton;
 
 @property (nonatomic,strong) NSManagedObjectContext* managedObjectContext;

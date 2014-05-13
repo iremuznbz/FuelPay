@@ -53,8 +53,7 @@
     [super viewDidLoad];
     
     [self parseJSON];
-    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithTitle:@"Routes" style:UIBarButtonItemStyleBordered target:self action:@selector(displayMap:)];
-    self.navigationItem.rightBarButtonItem = button;
+
 
    
 
@@ -108,9 +107,11 @@
     }
     else
         NSLog(@"Parsing is succesfull!");
+
     
+    NSLog(@"==========================");
     
-    NSLog(@"%@",jsonLocationDictionary);
+//    NSLog(@"%@",jsonLocationDictionary);
     
     
 }
@@ -199,9 +200,16 @@
     UINavigationController * navCont = [self navigationController];
     MapViewController *controller = [[MapViewController alloc]init];
     
-    [[controller selected]setLocationName:[[[jsonLocationDictionary objectForKey:@"results"] objectAtIndex:(int)[indexPath row]]objectForKey:@"name"]];
+    controller.receivedName = [[[jsonLocationDictionary objectForKey:@"results"]objectAtIndex:(int)[indexPath row]] objectForKey:@"name"];
     
-    [[controller selected] setLocationLongitude:[[[[[jsonLocationDictionary objectForKey:@"results"] objectAtIndex:[indexPath row]]objectForKey:@"geometry"] objectForKey:@"location"]objectForKey:@"lng" ]];
+    controller.receivedLon = [[[[[jsonLocationDictionary objectForKey:@"results"]objectAtIndex:(int)[indexPath row]] objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lng"];
+    
+    controller.receivedLat = [[[[[jsonLocationDictionary objectForKey:@"results"]objectAtIndex:(int)[indexPath row]] objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lat"];
+    
+    NSLog(@"name:%@",controller.receivedName);
+    NSLog(@"lat:%@",controller.receivedLat);
+    NSLog(@"lont:%@",controller.receivedLon);
+    NSLog(@"===============================");
     
     [navCont pushViewController:controller animated:YES];
     

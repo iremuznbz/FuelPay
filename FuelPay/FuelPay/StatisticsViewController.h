@@ -10,5 +10,8 @@
 
 @interface StatisticsViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UITextView *statistics;
+@property (weak, nonatomic) IBOutlet NSString *statisticsTL;
+@property (weak, nonatomic) IBOutlet NSString *statisticsKM;
+
 
 @end

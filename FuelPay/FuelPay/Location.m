@@ -12,7 +12,6 @@
 
 @dynamic locationName;
 @dynamic locationDescription;
-@dynamic locationAltitude;
 @dynamic locationLongitude;
 @dynamic locationLatitude;
 

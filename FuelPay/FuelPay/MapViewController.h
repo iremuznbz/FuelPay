@@ -11,13 +11,18 @@
 #import "GMDirectionService.h"
 #import <GoogleMaps/GoogleMaps.h>
 #import <CoreLocation/CoreLocation.h>
+#import "DataModel.h"
 
 @interface MapViewController : UIViewController <MKMapViewDelegate,CLLocationManagerDelegate>
-@property (strong, nonatomic) IBOutlet UIButton *myNavigateButton;
 
-- (IBAction)NavigateButton:(id)sender;
+
 -(CLLocationCoordinate2D)getGPSLocation;
-@property (strong,nonatomic) Location *selected;
+-(void) drawRoute;
+@property (strong,nonatomic)  Location *selected;
 @property (strong,nonatomic) GMSMapView *mapView;
+
+@property (strong,nonatomic) NSString *receivedName;
+@property (strong,nonatomic) NSNumber *receivedLat;
+@property (strong,nonatomic) NSNumber *receivedLon;
 
 @end

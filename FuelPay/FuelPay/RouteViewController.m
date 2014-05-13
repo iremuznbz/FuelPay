@@ -1,21 +1,21 @@
 
 //
-//  StatisticsViewController.m
-//  dene
+//  RouteViewController.m
+//  FuelPay
 //
-//  Created by irem uzunbaz on 4/16/14.
+//  Created by irem uzunbaz on 5/14/14.
 //  Copyright (c) 2014 irem uzunbaz. All rights reserved.
 //
 
-#import "StatisticsViewController.h"
+#import "RouteViewController.h"
+#import "MapViewController.h"
 
-@interface StatisticsViewController ()
+@interface RouteViewController ()
 
 @end
 
+@implementation RouteViewController
 
-@implementation StatisticsViewController
-@synthesize statisticsKM,statisticsTL,statistics;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -28,11 +28,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSMutableString *mystring = [[NSMutableString alloc]initWithString:statisticsKM];
-    [mystring appendString:@"TL="];
-    [mystring appendString:statisticsTL];
-    
-    [statistics setText:mystring];
     // Do any additional setup after loading the view.
 }
 
@@ -51,6 +46,11 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
 
+
+
+-(void)drawingRoute{
+
+}
+ */
 @end

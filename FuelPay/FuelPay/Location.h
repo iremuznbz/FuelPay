@@ -13,7 +13,6 @@
 
 @property (nonatomic, retain) NSString * locationName;
 @property (nonatomic, retain) NSString * locationDescription;
-@property (nonatomic, retain) NSNumber * locationAltitude;
 @property (nonatomic, retain) NSNumber * locationLongitude;
 @property (nonatomic ,retain) NSNumber * locationLatitude;
 
