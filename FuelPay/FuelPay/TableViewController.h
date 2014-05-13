@@ -13,4 +13,8 @@
 
 -(void) parseJSON;
 -(CLLocationCoordinate2D) getGPSLocation;
+
+@property(nonatomic,strong) NSManagedObjectContext *managedObjectContext;
+
+- (IBAction)displayMap:(id)sender;
 @end

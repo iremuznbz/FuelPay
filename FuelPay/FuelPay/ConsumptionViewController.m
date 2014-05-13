@@ -7,13 +7,14 @@
 //
 
 #import "ConsumptionViewController.h"
+#import "DataModel.h"
 
 @interface ConsumptionViewController ()
 
 @end
 
 @implementation ConsumptionViewController
-@synthesize kmField,tlField,sendButton;
+@synthesize kmField,tlField,sendButton,managedObjectContext,results;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -56,8 +57,15 @@
     NSLog(@"inputTL:%@",inputTL);
     
     [sendButton setHidden:YES];
-    [kmField resignFirstResponder];
-    [tlField resignFirstResponder];
+    
+    
+    DataModel *myInputs = (DataModel*)[NSEntityDescription insertNewObjectForEntityForName:@"Statistics" inManagedObjectContext:[self managedObjectContext]];
+                                       
+    [myInputs setValue:inputKM forKey:@"inputKM"];
+    [myInputs setValue:inputTL forKey:@"inputTL"];
+    
+    
+
 
 }
 

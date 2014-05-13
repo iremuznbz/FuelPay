@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CoreData/CoreData.h>
+
 
 @interface ConsumptionViewController : UIViewController
 - (IBAction)resignButton:(id)sender;
@@ -16,4 +18,6 @@
 - (IBAction)showStatistics:(id)sender;
 @property (strong, nonatomic) IBOutlet UIButton *sendButton;
 
+@property (nonatomic,strong) NSManagedObjectContext* managedObjectContext;
+@property(nonatomic,strong) NSArray *results;
 @end

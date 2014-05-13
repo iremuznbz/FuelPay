@@ -8,23 +8,24 @@
 
 #define METERS_PER_MILE 1609.344
 #import "MapViewController.h"
-#import <GoogleMaps/GoogleMaps.h>
-#import "GMDirectionService.h"
 
-static NSString *apiKey =@"AIzaSyDoMKG47zPCqSaN-w1j97FTAvs8bKZIzU0";
+
+static NSString *apiKey =@"";
 
 @interface MapViewController ()
 
 @end
+
 
 @implementation MapViewController {
     CLLocationManager *locationManager;
     NSData *mapData;
     NSDictionary *mapDictionary;
     NSString *requestURL;
-
+    CLLocationCoordinate2D userCoord;
 }
 
+@synthesize selected,mapView,myNavigateButton;
 
 
 
@@ -67,15 +68,23 @@ static NSString *apiKey =@"AIzaSyDoMKG47zPCqSaN-w1j97FTAvs8bKZIzU0";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:41
-                                                            longitude:29
-                                                                 zoom:3];
-    GMSMapView *mapView = [GMSMapView mapWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height) camera:camera];
+    
+     userCoord = [self getGPSLocation]; // camera will zoom user location with these datas
+    
+    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:userCoord.latitude
+                                                            longitude:userCoord.longitude
+                                                                 zoom:4];
+    mapView = [GMSMapView mapWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 40) camera:camera];
+    [mapView setMyLocationEnabled:YES];
+    [mapView bringSubviewToFront:myNavigateButton];
     
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = camera.target;
-    marker.snippet = @"Hello World";
+    marker.snippet = @"You re here";
     marker.map = mapView;
+    
+    NSLog(@"selected row name:%@",[self.selected locationName]);
+    
     /*
      GMSMutablePath *path = [GMSMutablePath path];
      [path addLatitude:-33.866 longitude:151.195]; // Sydney
@@ -91,8 +100,27 @@ static NSString *apiKey =@"AIzaSyDoMKG47zPCqSaN-w1j97FTAvs8bKZIzU0";
     
     [self.view addSubview:mapView];
     
-    NSString *startPos =[NSString stringWithFormat:@"41,29"];
-    NSString *endPos =[NSString stringWithFormat:@"41,30"];
+    
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+-(NSString *) stringByStrippingHTML:(NSString*)s {
+    NSRange r;
+    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
+        s = [s stringByReplacingCharactersInRange:r withString:@""];
+    return s;
+}
+
+- (IBAction)NavigateButton:(id)sender {
+    
+    NSString *startPos =[NSString stringWithFormat:@"%f,%f",userCoord.latitude,userCoord.longitude];
+    NSString *endPos =[NSString stringWithFormat:@"%@,%@",selected.locationLatitude,selected.locationLongitude];
     
     [[GMDirectionService sharedInstance] getDirectionsFrom:startPos to:endPos succeeded:^(GMDirection *directionResponse) {
         if ([directionResponse statusOK]){
@@ -104,46 +132,19 @@ static NSString *apiKey =@"AIzaSyDoMKG47zPCqSaN-w1j97FTAvs8bKZIzU0";
             polyline.strokeWidth = 3.f;
             polyline.map = mapView;
             NSArray *steps =[[[[routes objectAtIndex:0] objectForKey:@"legs"] objectAtIndex:0] objectForKey:@"steps"];
+            
+            
             for (NSDictionary*dict in steps) {
                 NSLog(@"%@", [self stringByStrippingHTML:[dict objectForKey:@"html_instructions"]]);
                 
             }
+            
             //NSLog(@"steps%@",steps);
         }
         NSLog(@"direction response:%@ from:%@ to:%@",directionResponse.status,startPos,endPos);
     } failed:^(NSError *error) {
         NSLog(@"Can't reach the server");
     }];
-    
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
--(NSString *) stringByStrippingHTML:(NSString*)s {
-    NSRange r;
-    while ((r = [s rangeOfString:@"<[^>]+>" options:NSRegularExpressionSearch]).location != NSNotFound)
-        s = [s stringByReplacingCharactersInRange:r withString:@""];
-    return s;
-}
-
-- (IBAction)NavigateButton:(id)sender {
-    
     
     
 

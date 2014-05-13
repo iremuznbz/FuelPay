@@ -7,9 +7,10 @@
 //
 
 #import "TableViewController.h"
+#import "MapViewController.h"
 #import <CoreLocation/CoreLocation.h>
 
-#define PlaceURLString @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&types=gas_station&sensor=true&key=AIzaSyBGOtAMCrI28YJ__SH6239zMbcGJIL0_Lg"
+#define PlaceURLString @"https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%f,%f&radius=%f&types=gas_station&sensor=true&key=AIzaSyAr69JMslZOMESBjDH2EB1tqeKBW11oiqg"
 
 
 
@@ -52,6 +53,8 @@
     [super viewDidLoad];
     
     [self parseJSON];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc]initWithTitle:@"Routes" style:UIBarButtonItemStyleBordered target:self action:@selector(displayMap:)];
+    self.navigationItem.rightBarButtonItem = button;
 
    
 
@@ -189,15 +192,32 @@
 }
 */
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
+    UINavigationController * navCont = [self navigationController];
+    MapViewController *controller = [[MapViewController alloc]init];
+    
+    [[controller selected]setLocationName:[[[jsonLocationDictionary objectForKey:@"results"] objectAtIndex:(int)[indexPath row]]objectForKey:@"name"]];
+    
+    [[controller selected] setLocationLongitude:[[[[[jsonLocationDictionary objectForKey:@"results"] objectAtIndex:[indexPath row]]objectForKey:@"geometry"] objectForKey:@"location"]objectForKey:@"lng" ]];
+    
+    [navCont pushViewController:controller animated:YES];
+    
+
+    
+    
+    
+    
+}
+
+- (IBAction)displayMap:(id)sender {
+    
+    UINavigationController * navCont = [self navigationController];
+    MapViewController* controller = [[MapViewController alloc]init];
+
+    [navCont pushViewController:controller animated:YES];
+    
+}
 @end
